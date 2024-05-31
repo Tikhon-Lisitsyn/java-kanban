@@ -7,7 +7,6 @@ import main.java.com.yandex.kanban.model.Task;
 import java.util.List;
 
 public interface TaskManager {
-
     public Task addTask(Task task);
 
     public Task getTaskById(int id);

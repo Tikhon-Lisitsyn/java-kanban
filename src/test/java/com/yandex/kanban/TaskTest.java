@@ -1,18 +1,16 @@
 package test.java.com.yandex.kanban;
 
 import main.java.com.yandex.kanban.model.Task;
-
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
 
     @Test
     void task1AndTask2EqualsId() {
-
         Task task1 = new Task();
         task1.setId(1);
-
         Task task2 = new Task();
         task2.setId(1);
 

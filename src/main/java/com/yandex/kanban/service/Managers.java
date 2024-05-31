@@ -1,7 +1,6 @@
 package main.java.com.yandex.kanban.service;
 
 public class Managers {
-
     private static TaskManager taskManager;
     private static HistoryManager historyManager;
 

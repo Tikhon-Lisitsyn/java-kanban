@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-
     private static int taskCounter = 1;
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Subtask> subtasks;
     private final HashMap<Integer, Epic> epics;
+
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager() {
@@ -48,6 +48,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+
     public List<Task> getAllTasks() {
         ArrayList<Task> allTasks = new ArrayList<>(tasks.values());
         System.out.println("Список всех задач: ");
@@ -55,6 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+
     public void removeAllTasks() {
         tasks.clear();
         System.out.println("Все задачи удалены!");
@@ -65,6 +67,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.containsKey(id)) {
             System.out.println("Удалена задача по ID: " + tasks.get(id));
             tasks.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Неверный ID задачи!");
         }
@@ -97,6 +100,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.getIdOfSubtasks().clear();
         }
         System.out.println("Все подзадачи удалены!");
+
     }
 
     @Override
@@ -125,8 +129,6 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 return null;
             }
-
-
         } else {
             System.out.println("Нет эпика с таким ID!");
         }
@@ -151,6 +153,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtasks.containsKey(id)) {
             System.out.println("Удалена подзадача по ID: " + subtasks.get(id));
             subtasks.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Неверный ID подзадачи!");
         }
@@ -211,6 +214,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(id)) {
             System.out.println("Удален эпик по ID: " + epics.get(id));
             epics.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Неверный ID эпика!");
         }
