@@ -18,6 +18,7 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void addTaskToHistory() {
+        assertTrue(historyManager.getHistory().isEmpty(),"История не пуста!");
         Task task = new Task();
         historyManager.add(task);
         assertTrue(historyManager.getHistory().contains(task), "Задача не добавлена в историю!");
@@ -29,5 +30,20 @@ class InMemoryHistoryManagerTest {
         historyManager.add(task);
         historyManager.remove(task.getId());
         assertFalse(historyManager.getHistory().contains(task), "Задача не удалена из истории!");
+    }
+
+    @Test
+    void removeNonExistentTask() {
+        int nonExistentTaskId = 999;
+        historyManager.remove(nonExistentTaskId);
+        // Проверяем, что никаких исключений не возникло
+    }
+
+    @Test
+    void removeSingleTaskFromHistory() {
+        Task task = new Task();
+        historyManager.add(task);
+        historyManager.remove(task.getId());
+        assertTrue(historyManager.getHistory().isEmpty(), "Задача не удалена из истории!");
     }
 }
