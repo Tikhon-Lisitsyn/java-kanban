@@ -17,7 +17,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return "main.java.com.yandex.kanban.model.Task{" + "name='" + name + "' description= '" + description + "' id= '" + id + "' status= '" + status + "'}";
+        return "main.java.com.yandex.kanban.model.Task{" + "name='" + name + "' description= '" + description
+                + "' id= '" + id + "' status= '" + status + "'}";
     }
 
     public void setId(int id) {
