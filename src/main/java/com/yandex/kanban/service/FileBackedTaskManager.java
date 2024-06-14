@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
-    private File newFile;
+    private final File newFile;
 
     public FileBackedTaskManager(File newFile) {
+        if (newFile == null) {
+            throw new IllegalArgumentException("File cannot be null");
+        }
         this.newFile = newFile;
     }
 
@@ -64,16 +67,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 subtask.getEpicId());
     }
 
-    static FileBackedTaskManager loadFromFile(File file) {
+    static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
         FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            boolean isHeader = true;
+            br.readLine();
             while (br.ready()) {
-                if (isHeader) {
-                    isHeader = false;
-                    continue;
-                }
                 String line = br.readLine();
                 String[] fields = line.split(",");
                 String type = fields[1];
@@ -117,7 +116,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ManagerSaveException("Ошибка при вводе-выводе данных");
         }
 
         return taskManager;
