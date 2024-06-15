@@ -116,6 +116,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
             throw new ManagerSaveException("Ошибка при вводе-выводе данных");
         }
 
