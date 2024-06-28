@@ -48,7 +48,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-
     public List<Task> getAllTasks() {
         ArrayList<Task> allTasks = new ArrayList<>(tasks.values());
         System.out.println("Список всех задач: ");

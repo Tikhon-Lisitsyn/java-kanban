@@ -6,6 +6,15 @@ public class Subtask extends Task {
 
     }
 
+    public int getEpicId() {
+        return epicId;
+    }
+
+    public void setEpicId(int id) {
+        this.epicId=id;
+    }
+
+
     @Override
     public String toString() {
         return "main.java.com.yandex.kanban.model.Subtask{" + "name='" +getName() + "' description= '"+getDescription()
