@@ -4,9 +4,7 @@ import main.java.com.yandex.kanban.model.Epic;
 import main.java.com.yandex.kanban.model.Subtask;
 import main.java.com.yandex.kanban.model.Task;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int taskCounter = 1;
@@ -24,7 +22,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task addTask(Task task) {
+        validateTask(task);
         if (task != null) {
+            boolean isOverlapping = tasks.values().stream()
+                    .anyMatch(existingTask -> existingTask.isOverlapping(task));
+            if (isOverlapping) {
+                throw new IllegalArgumentException("The task overlaps with an existing task.");
+            }
             int id = taskCounter++;
             task.setId(id);
             tasks.put(id, task);
@@ -74,6 +78,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task updateTask(Task newTask, int id) {
+        validateTask(newTask);
         if (tasks.containsKey(id)) {
             tasks.remove(id);
             tasks.put(id, newTask);
@@ -264,6 +269,37 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setStatus(TaskStatus.DONE);
         } else {
             epic.setStatus(TaskStatus.IN_PROGRESS);
+        }
+    }
+
+    @Override
+    public Set<Task> getPrioritizedTasks() {
+        Set<Task> prioritizedTasks = new TreeSet<>();
+        prioritizedTasks.addAll(getAllTasks());
+        prioritizedTasks.addAll(getAllEpics());
+        prioritizedTasks.addAll(getAllSubtasks());
+        return prioritizedTasks;
+    }
+
+    public boolean areTasksOverlapping(int id1, int id2) {
+        Task task1 = tasks.get(id1);
+        Task task2 = tasks.get(id2);
+        if (task1 == null || task2 == null) {
+            throw new IllegalArgumentException("Неверные id задач.");
+        }
+        return task1.isOverlapping(task2);
+    }
+
+    @Override
+    public void validateTask(Task task) {
+        if (task.getName()==null || task.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("У задачи нет имени.");
+        }
+        if (task.getDescription()==null || task.getDescription().trim().isEmpty()) {
+            throw new IllegalArgumentException("У задачи нет описания.");
+        }
+        if (task.getStartTime()==null || task.getDuration()==null) {
+            throw new IllegalArgumentException("Начало или длительность задачи не может быть null");
         }
     }
 }

@@ -5,6 +5,7 @@ import main.java.com.yandex.kanban.model.Subtask;
 import main.java.com.yandex.kanban.model.Task;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     public Task addTask(Task task);
@@ -50,4 +51,8 @@ public interface TaskManager {
     public int getSubid(Subtask subtask);
 
     public void calculateEpicStatus(Epic epic);
+
+    public Set<Task> getPrioritizedTasks();
+
+    public void validateTask(Task task);
 }
