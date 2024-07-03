@@ -4,6 +4,7 @@ import main.java.com.yandex.kanban.model.Epic;
 import main.java.com.yandex.kanban.model.Subtask;
 import main.java.com.yandex.kanban.model.Task;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -11,22 +12,21 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Subtask> subtasks;
     private final HashMap<Integer, Epic> epics;
-
+    private final Set<Task> prioritizedTasks;
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.subtasks = new HashMap<>();
         this.epics = new HashMap<>();
+        this.prioritizedTasks = new TreeSet<>();
     }
 
     @Override
     public Task addTask(Task task) {
         validateTask(task);
         if (task != null) {
-            boolean isOverlapping = tasks.values().stream()
-                    .anyMatch(existingTask -> existingTask.isOverlapping(task));
-            if (isOverlapping) {
+            if (isTaskOverlapping(task)) {
                 throw new IllegalArgumentException("The task overlaps with an existing task.");
             }
             int id = taskCounter++;
@@ -272,9 +272,17 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    public boolean isOverlapping(Task task1,Task task2) {
+        if (task1.getStartTime() == null || task1.getDuration() == null || task2.getStartTime() == null || task2.getDuration() == null) {
+            return false;
+        }
+        LocalDateTime thisEndTime = task1.getStartTime().plus(task1.getDuration());
+        LocalDateTime otherEndTime = task2.getStartTime().plus(task2.getDuration());
+        return task1.getStartTime().isBefore(otherEndTime) && task2.getStartTime().isBefore(thisEndTime);
+    }
+
     @Override
     public Set<Task> getPrioritizedTasks() {
-        Set<Task> prioritizedTasks = new TreeSet<>();
         prioritizedTasks.addAll(getAllTasks());
         prioritizedTasks.addAll(getAllEpics());
         prioritizedTasks.addAll(getAllSubtasks());
@@ -287,7 +295,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task1 == null || task2 == null) {
             throw new IllegalArgumentException("Неверные id задач.");
         }
-        return task1.isOverlapping(task2);
+        return isOverlapping(task1,task2);
     }
 
     @Override
@@ -301,5 +309,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (task.getStartTime()==null || task.getDuration()==null) {
             throw new IllegalArgumentException("Начало или длительность задачи не может быть null");
         }
+    }
+
+    public boolean isTaskOverlapping(Task task) {
+        return tasks.values().stream().anyMatch(existingTask -> isOverlapping(existingTask,task));
     }
 }

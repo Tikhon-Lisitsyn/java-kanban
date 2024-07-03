@@ -9,9 +9,11 @@ import java.util.ArrayList;
 public class Epic extends Task {
     private final ArrayList<Integer> idOfSubtasks;
     private LocalDateTime endTime;
+    private final InMemoryTaskManager taskManager;
 
     public Epic() {
         idOfSubtasks = new ArrayList<>();
+        taskManager = new InMemoryTaskManager();
     }
 
     public ArrayList<Integer> getIdOfSubtasks() {
@@ -19,7 +21,6 @@ public class Epic extends Task {
     }
 
     public LocalDateTime getStartTime(int epicId) {
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
         LocalDateTime minStartTime=taskManager.getSubtaskById(taskManager.getEpicById(epicId).getIdOfSubtasks()
                 .getFirst()).getStartTime();
         for (Integer id:idOfSubtasks) {
@@ -32,7 +33,6 @@ public class Epic extends Task {
     }
 
     public LocalDateTime getEndTime(int epicId) {
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
         LocalDateTime maxEndTime=taskManager.getSubtaskById(taskManager.getEpicById(epicId).getIdOfSubtasks()
                 .getFirst()).getStartTime();
         for (Integer id:idOfSubtasks) {

@@ -16,15 +16,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HistoryManagerTest {
     private HistoryManager historyManager;
+    private Task task;
+    private Task task1;
+    private Task task2;
+    private Task task3;
 
     @BeforeEach
     void setUp() {
         historyManager = new InMemoryHistoryManager();
+        task = new Task();
+        task1 = new Task();
+        task2 = new Task();
+        task3 = new Task();
     }
 
     @Test
     void getHistory() {
-        Task task = new Task();
         task.setName("Test Task");
         task.setDescription("This is a test task");
         task.setStartTime(LocalDateTime.now());
@@ -36,7 +43,6 @@ class HistoryManagerTest {
 
     @Test
     void add() {
-        Task task = new Task();
         task.setName("Test Task");
         task.setDescription("This is a test task");
         task.setStartTime(LocalDateTime.now());
@@ -48,7 +54,6 @@ class HistoryManagerTest {
 
     @Test
     void remove() {
-        Task task = new Task();
         task.setName("Test Task");
         task.setDescription("This is a test task");
         task.setStartTime(LocalDateTime.now());
@@ -61,14 +66,12 @@ class HistoryManagerTest {
 
     @Test
     void removeFromBeginning() {
-        Task task1 = new Task();
         task1.setName("Test Task 1");
         task1.setDescription("This is a test task 1");
         task1.setStartTime(LocalDateTime.now());
         task1.setDuration(Duration.ofHours(1));
         task1.setId(1);
         historyManager.add(task1);
-        Task task2 = new Task();
         task2.setName("Test Task 2");
         task2.setDescription("This is a test task 2");
         task2.setStartTime(LocalDateTime.now().plusHours(1));
@@ -82,21 +85,18 @@ class HistoryManagerTest {
 
     @Test
     void removeFromMiddle() {
-        Task task1 = new Task();
         task1.setName("Test Task 1");
         task1.setDescription("This is a test task 1");
         task1.setStartTime(LocalDateTime.now());
         task1.setDuration(Duration.ofHours(1));
         task1.setId(1);
         historyManager.add(task1);
-        Task task2 = new Task();
         task2.setName("Test Task 2");
         task2.setDescription("This is a test task 2");
         task2.setStartTime(LocalDateTime.now().plusHours(1));
         task2.setDuration(Duration.ofHours(1));
         task2.setId(2);
         historyManager.add(task2);
-        Task task3 = new Task();
         task3.setName("Test Task 3");
         task3.setDescription("This is a test task 3");
         task3.setStartTime(LocalDateTime.now().plusHours(2));
@@ -111,14 +111,12 @@ class HistoryManagerTest {
 
     @Test
     void removeFromEnd() {
-        Task task1 = new Task();
         task1.setName("Test Task 1");
         task1.setDescription("This is a test task 1");
         task1.setStartTime(LocalDateTime.now());
         task1.setDuration(Duration.ofHours(1));
         task1.setId(1);
         historyManager.add(task1);
-        Task task2 = new Task();
         task2.setName("Test Task 2");
         task2.setDescription("This is a test task 2");
         task2.setStartTime(LocalDateTime.now().plusHours(1));
@@ -132,7 +130,6 @@ class HistoryManagerTest {
 
     @Test
     void duplicateTasks() {
-        Task task = new Task();
         task.setName("Test Task");
         task.setDescription("This is a test task");
         task.setStartTime(LocalDateTime.now());

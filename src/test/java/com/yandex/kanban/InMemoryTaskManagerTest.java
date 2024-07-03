@@ -5,6 +5,7 @@ import main.java.com.yandex.kanban.model.Subtask;
 import main.java.com.yandex.kanban.model.Task;
 import main.java.com.yandex.kanban.service.InMemoryTaskManager;
 import main.java.com.yandex.kanban.service.TaskStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -13,11 +14,17 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
+    private InMemoryTaskManager inMemoryTaskManager;
+    private Task task;
+
+    @BeforeEach
+    void setUp() {
+        inMemoryTaskManager = new InMemoryTaskManager();
+        task = new Task();
+    }
 
     @Test
     void inMemoryTaskManagerAddsAllTypesOfTasksAndFindById() {
-        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
-        Task task = new Task();
         task.setName("Task with auto-generated ID");
         task.setDescription("Task`s description");
         task.setDuration(Duration.ofSeconds(1));
@@ -39,8 +46,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     void tasksWithAGivenIdAndAGeneratedIdDoNotConflict() {
-        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
-        Task task = new Task();
         task.setName("Task with auto-generated ID");
         task.setDescription("Task`s description");
         task.setDuration(Duration.ofSeconds(1));
@@ -59,7 +64,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     void CheckingWhetherATaskIsUnchangedWhenAdded() {
-        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
         Task originalTask = new Task();
         originalTask.setName("Первоначальное имя");
         originalTask.setDescription("Первоначальное описание");

@@ -77,15 +77,6 @@ public class Task implements Comparable<Task>{
         return duration;
     }
 
-    public boolean isOverlapping(Task other) {
-        if (this.startTime == null || this.duration == null || other.startTime == null || other.duration == null) {
-            return false;
-        }
-        LocalDateTime thisEndTime = this.startTime.plus(this.duration);
-        LocalDateTime otherEndTime = other.startTime.plus(other.duration);
-        return this.startTime.isBefore(otherEndTime) && other.startTime.isBefore(thisEndTime);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
