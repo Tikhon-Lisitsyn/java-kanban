@@ -1,9 +1,14 @@
 package main.java.com.yandex.kanban.model;
 
+import main.java.com.yandex.kanban.service.InMemoryTaskManager;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
     private final ArrayList<Integer> idOfSubtasks;
+    private LocalDateTime endTime;
 
     public Epic() {
         idOfSubtasks = new ArrayList<>();
@@ -11,6 +16,15 @@ public class Epic extends Task {
 
     public ArrayList<Integer> getIdOfSubtasks() {
         return idOfSubtasks;
+    }
+    
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public Duration getDuration(int id) {
+        return Duration.between(getStartTime(),getEndTime());
     }
 
     @Override

@@ -67,7 +67,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 subtask.getEpicId());
     }
 
-    static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
+    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
         FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -116,13 +116,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new ManagerSaveException("Ошибка при вводе-выводе данных");
+            throw new ManagerSaveException("Ошибка при вводе-выводе данных",e);
         }
-
         return taskManager;
     }
-
 
     @Override
     public Task getTaskById(int id) {
