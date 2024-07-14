@@ -29,7 +29,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
         String[] splitPath = path.split("/");
 
         switch (method) {
-            case "GET":
+            case GET:
                 if (splitPath.length == 2) {
                     sendText(httpExchange, gson.toJson(taskManager.getAllTasks()));
                 } else if (splitPath.length == 3) {
@@ -42,7 +42,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     }
                 }
                 break;
-            case "POST":
+            case POST:
                 if (splitPath.length == 2) {
                     try (Reader reader = new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8)) {
                         Task task = gson.fromJson(reader, Task.class);
@@ -57,7 +57,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     }
                 }
                 break;
-            case "DELETE":
+            case DELETE:
                 if (splitPath.length == 3) {
                     int id = Integer.parseInt(splitPath[2]);
                     taskManager.removeTaskById(id);

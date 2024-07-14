@@ -10,6 +10,7 @@ import main.java.com.yandex.kanban.service.TaskManager;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
@@ -29,7 +30,7 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
         String[] splitPath = path.split("/");
 
         switch (method) {
-            case "GET":
+            case GET:
                 if (splitPath.length == 2) {
                     sendText(httpExchange, gson.toJson(taskManager.getAllSubtasks()));
                 } else if (splitPath.length == 3) {
@@ -38,11 +39,11 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                     if (subtask != null) {
                         sendText(httpExchange, gson.toJson(subtask));
                     } else {
-                        httpExchange.sendResponseHeaders(404, 0);
+                        sendErrorResponse(httpExchange, 404, "Подзадача не найдена.");
                     }
                 }
                 break;
-            case "POST":
+            case POST:
                 if (splitPath.length == 2) {
                     try (Reader reader = new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8)) {
                         Subtask subtask = gson.fromJson(reader, Subtask.class);
@@ -53,11 +54,11 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                         }
                         httpExchange.sendResponseHeaders(201, 0);
                     } catch (JsonSyntaxException e) {
-                        httpExchange.sendResponseHeaders(400, 0); // Bad Request
+                        sendErrorResponse(httpExchange, 400, "Некорректный JSON формат.");
                     }
                 }
                 break;
-            case "DELETE":
+            case DELETE:
                 if (splitPath.length == 3) {
                     int id = Integer.parseInt(splitPath[2]);
                     taskManager.removeSubtaskById(id);
@@ -65,7 +66,27 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                 }
                 break;
             default:
-                httpExchange.sendResponseHeaders(404, 0);
+                sendErrorResponse(httpExchange, 404, "Not found");
+        }
+    }
+
+    private void sendErrorResponse(HttpExchange httpExchange, int statusCode, String message) throws IOException {
+        String response = gson.toJson(new ErrorResponse(statusCode, message));
+        httpExchange.sendResponseHeaders(statusCode, response.length());
+        try (OutputStream os = httpExchange.getResponseBody()) {
+            os.write(response.getBytes());
+        }
+    }
+
+    private static class ErrorResponse {
+        private final int statusCode;
+        private final String message;
+
+        public ErrorResponse(int statusCode, String message) {
+            this.statusCode = statusCode;
+            this.message = message;
         }
     }
 }
+
+
