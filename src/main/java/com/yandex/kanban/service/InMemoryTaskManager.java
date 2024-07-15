@@ -283,10 +283,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Set<Task> getPrioritizedTasks() {
-        prioritizedTasks.addAll(getAllTasks());
-        prioritizedTasks.addAll(getAllEpics());
-        prioritizedTasks.addAll(getAllSubtasks());
-        return prioritizedTasks;
+        prioritizedTasks.clear();
+        prioritizedTasks.addAll(tasks.values());
+        prioritizedTasks.addAll(epics.values());
+        prioritizedTasks.addAll(subtasks.values());
+        return new TreeSet<>(prioritizedTasks);
     }
 
     public boolean areTasksOverlapping(int id1, int id2) {
